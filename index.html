@@ -1,0 +1,63 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-12-21 14:10:39
+ * @LastEditTime: 2021-01-13 20:45:20
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \webrtc-test\index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC code samples</title>
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <section>
+        <h2>视频通话</h2>
+        <select name="desktop" id="mediaOptions">
+            <option value="camera">摄像头</option>
+            <option value="desktop" selected>桌面</option>
+        </select>
+        <select name="camera" id="cameraOptions" class="hide">
+            <option value="user" selected>前摄</option>
+            <option value="environment">后摄</option>
+        </select>
+        <button id="startLive" class="hide" type="button">发起通话</button>
+    </section>
+    <section>
+        <div class="video-box">
+            <label for="local">my video</label>
+            <video id="myVideo" muted autoplay playsinline></video>
+        </div>
+        <div class="video-box">
+            <label for="local">remote video</label>
+            <video id="remoteVideo" autoplay playsinline></video>
+        </div>
+    </section>
+    <section>
+        <hr><h2>数据通道</h2>
+        <textarea name="content" id="content" cols="30" rows="10"></textarea>
+        <button id="sendData">发送</button>
+    </section>
+    <section>
+        <label for="">接收</label>
+        <ul id="receiveDataBox">
+            <li></li>
+        </ul>
+    </section>
+    <script src="./scripts/vconsole.min.js"></script>
+    <script src="./scripts/socket.io-3.0.1.min.js"></script>
+    <script src="./scripts/adapter-7.7.0.js"></script>
+    <script>
+        var vConsole = new VConsole();
+    </script> 
+    <script src="./scripts/main.js"></script>
+</body>
+
+</html>

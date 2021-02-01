@@ -1,0 +1,21 @@
+video {
+    width: 300px;
+}
+.show {
+    display: initial;
+}
+.hide {
+    display: none;
+}
+
+ul,li {
+    list-style: none;
+}
+section{
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+#receiveDataBox{
+    padding-bottom: 50px;
+}
