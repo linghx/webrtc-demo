@@ -1,0 +1,80 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-03-11 15:34:46
+ * @LastEditTime: 2021-03-11 15:36:41
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \webrtc-demo\codec.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODEC Demo</title>
+</head>
+
+<body>
+    <div>
+        <video id='local'></video>
+        <video id='remote'></video>
+    </div>
+    <script src="./scripts/vconsole.min.js"></script>
+    <script src="./scripts/adapter-7.7.0.js"></script>
+    <script>
+        const WIDTH = 1280;
+        const HEIGHT = 720;
+        const MAX_BITRATE = 200000;
+        const CODEC = "VP8";  // VP8, VP9, H264, AV1X
+
+        const local = document.getElementById('local')
+        const remote = document.getElementById('remote')
+
+        const { codecs } = RTCRtpSender.getCapabilities('video');
+        const selectedCodecIndex = codecs.findIndex(c => c.mimeType === `video/${CODEC}`);
+        const selectedCodec = codecs[selectedCodecIndex];
+        codecs.splice(selectedCodecIndex, 1);
+        codecs.unshift(selectedCodec);
+
+        const pc1 = new RTCPeerConnection({});
+        const pc2 = new RTCPeerConnection({});
+        pc1.onicecandidate = (event) => {
+            pc2.addIceCandidate(event.candidate);
+        };
+        pc2.onicecandidate = (event) => {
+            pc1.addIceCandidate(event.candidate);
+        };
+        pc2.ontrack = (event) => {
+            remote.srcObject = new MediaStream([event.track]);
+        };
+        navigator.mediaDevices.getUserMedia({ audio: false, video: { width: WIDTH, height: HEIGHT } }).then(async (stream) => {
+            local.srcObject = stream;
+            const sender = pc1.addTrack(stream.getVideoTracks()[0]);
+            const transceiver = pc1.getTransceivers()[0]
+            transceiver.setCodecPreferences(codecs);
+
+            const offer = await pc1.createOffer();
+            // offer.sdp = offer.sdp.replace("96 97 98 99 100 101 102 121 127 120 125 107 108 109 35 36 124 119 123 118 114 115 116", "35 36 96 97 98 99 100 101 102 121 127 120 125 107 108 109 124 119 123 118 114 115 116"); // AV1
+            // offer.sdp = offer.sdp.replace("96 97 98 99 100 101 102 121 127 120 125 107 108 109 35 36 124 119 123 118 114 115 116", "102 96 97 98 99 100 101 121 127 120 125 107 108 109 35 36 124 119 123 118 114 115 116"); // H264
+            // offer.sdp = offer.sdp.replace("96 97 98 99 100 101 102 121 127 120 125 107 108 109 35 36 124 119 123 118 114 115 116", "98 99 96 97 100 101 102 121 127 120 125 107 108 109 35 36 124 119 123 118 114 115 116"); // VP9
+
+            //   console.log(offer.sdp)
+            // 96 VP8
+            // 98 or 100 (prof 2) VP9
+            // 102-108 123-124 H264
+            // 35 AV1
+
+            await [pc1.setLocalDescription(offer), pc2.setRemoteDescription(offer)];
+            const answer = await pc2.createAnswer();
+            await [pc2.setLocalDescription(answer), pc1.setRemoteDescription(answer)];
+
+            const params = sender.getParameters();
+            params.encodings[0].maxBitrate = MAX_BITRATE;
+            sender.setParameters(params);
+        });
+    </script>
+</body>
+
+</html>
