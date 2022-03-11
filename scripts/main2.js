@@ -1,11 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2020-12-21 14:12:35
- * @LastEditTime: 2021-11-25 18:12:29
+ * @LastEditTime: 2021-11-25 18:12:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \webrtc-test\scripts\main.js
  */
+const myCameraVideo = document.querySelector('#myCamera');
 const localVideo = document.querySelector('#myVideo');
 const remoteVideo = document.querySelector('#remoteVideo');
 const mediaOptions = document.querySelector('#mediaOptions');
@@ -19,37 +20,11 @@ if (userType === 'offer') {
     startLiveBtn.classList.remove('hide')
 }
 
-if(!IsPC()) {
-    mediaOptions.classList.add('hide');
-    cameraOptions.classList.remove('hide');
-    mediaOptions.value = 'camera';
-    constraints.video = {
-        facingMode: cameraOptions.value
-    }
-
-    cameraOptions.onchange = function () {
-        constraints.video = {
-            facingMode: cameraOptions.value
-        }
-        getMediaStream(constraints)
-            .then(stream => {
-                addStream(stream)
-            })
-    }
-}else {
-    mediaOptions.onchange = function () {
-        getMediaStream(constraints)
-            .then(stream => {
-                addStream(stream)
-            })
-    }
-}
-
-
 startLiveBtn.onclick = function () {
     if (!startLiveStatus) {
         startLiveStatus = true;
-        startLive();
+        // startLive();
+        startDesktopLive()
     }
 }
 
@@ -128,7 +103,7 @@ sendData.onclick = function() {
 
 
 const socket = 
-io.connect('//172.17.55.153/'); 
+io.connect('//172.17.2.42/'); 
 // io.connect('//121.5.68.178/');
 socket.on('connect', function (event) {});
 socket.on('message', data => {
@@ -150,6 +125,51 @@ socket.on('message', data => {
     }
 })
 
+
+function startDesktopLive(offerSdp) {
+    getDisplayMedia(constraints)
+    .then(stream => {
+        
+        localVideo.srcObject = stream;
+        stream.getTracks().forEach(track => {
+            peer.addTrack(track, stream)
+        });
+
+        if (!offerSdp) {
+            createOffer()
+        }
+        else {
+            createAnswer(offerSdp)
+        }
+        setTimeout(() => {
+            startCameraLive()
+        }, 3000);
+    })
+    .catch((error) => {
+        alert(error)
+    })
+}
+
+function startCameraLive(offerSdp) {
+    getUserMedia(constraints)
+    .then(stream => {
+        
+        myCameraVideo.srcObject = stream;
+        stream.getTracks().forEach(track => {
+            peer.addTrack(track, stream)
+        });
+
+        if (!offerSdp) {
+            createOffer()
+        }
+        else {
+            createAnswer(offerSdp)
+        }
+    })
+    .catch((error) => {
+        alert(error)
+    })
+}
 
 function startLive(offerSdp) {
     getMediaStream(constraints)

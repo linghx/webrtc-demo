@@ -1,0 +1,38 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-12-01 17:31:24
+ * @LastEditTime: 2021-12-01 17:57:22
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \webrtc-demo\scripts\student.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生</title>
+</head>
+<body>
+    <section>
+        <div>
+            <h2>老师画面</h2>
+            <video id="teacherVideo" muted autoplay playsinline></video>
+        </div>
+        <hr>
+        <div>
+            <button id="camera">开启摄像头</button>
+            <button id="cameraPush">直播连麦</button>
+            <video id="myVideo" muted autoplay playsinline></video>
+        </div>
+    </section>
+    
+    <script src="./scripts/vconsole.min.js"></script>
+    <script src="https://g.alicdn.com/CodeBaseOne/H5RTSSdk/2.0.2/aliyun-rts-sdk.js"></script>
+    <script>
+        var vConsole = new VConsole();
+    </script> 
+    <script src="./scripts/student.js"></script>
+</body>
+</html>

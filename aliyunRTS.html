@@ -1,0 +1,35 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-11-26 14:16:02
+ * @LastEditTime: 2021-12-03 14:30:05
+ * @LastEditors: Please set LastEditors
+ * @Description: 阿里云低延迟直播、云端合流demo
+ * @FilePath: \webrtc-demo\aliyunRTS.html
+-->
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿里云RTS-demo</title>
+</head>
+<body>
+    <section>
+        <div>
+            <button id="screen">分享屏幕</button>
+            <button id="camera">开启摄像头</button>
+            <hr>
+            <button id="screenPush">屏幕推流</button>
+            <button id="cameraPush">摄像头推流</button>
+        </div>
+        <div class="video-box">
+            <label for="local">my video</label>
+            <video id="myVideo" muted autoplay playsinline></video>
+            <video id="myCamera" muted autoplay playsinline></video>
+        </div>
+    </section>
+    
+    <script src="https://g.alicdn.com/CodeBaseOne/H5RTSSdk/2.0.2/aliyun-rts-sdk.js"></script>
+    <script src="./scripts/rts.js"></script>
+</body>
+</html>

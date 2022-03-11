@@ -1,0 +1,59 @@
+<!--
+ * @Author: your name
+ * @Date: 2022-03-07 09:51:02
+ * @LastEditTime: 2022-03-11 15:49:23
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \undefinedc:\Users\XHX\Downloads\webrtc-screen-shot.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webrtc-screen-shot</title>
+</head>
+<body>
+    <div>
+        <button id="btn">截图</button>
+    </div>
+    <video id="video" autoplay muted ></video>
+    <canvas id="canvas" width="1280" height="720"></canvas>
+    <img id="screenshot" src="" alt="screenshot">
+    <script>
+        window.onload = () => {
+            const videoElem = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+
+            async function startCapture () {
+                let captureStream = null;
+                captureStream = await navigator.mediaDevices.getDisplayMedia({video: true});
+                videoElem.srcObject = captureStream;
+                return captureStream
+            }
+            
+            function stopCapture() {
+                let tracks = videoElem.srcObject.getTracks();
+
+                tracks.forEach(track => track.stop());
+                videoElem.srcObject = null;
+            }
+
+            function screenShot () {
+                const context = canvas.getContext('2d');
+                startCapture().then(() => {
+                    videoElem.addEventListener('play', () => {
+                        context.drawImage(videoElem, 0, 0, canvas.width, canvas.height);
+                        let dataURL = canvas.toDataURL('image/jpeg');
+                        document.getElementById('screenshot').src = dataURL;
+                        stopCapture()
+                    })
+                })
+            }
+
+            document.getElementById('btn').addEventListener('click', screenShot)
+        }
+    </script>
+</body>
+</html>
